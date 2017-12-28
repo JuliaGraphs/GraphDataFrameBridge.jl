@@ -1,5 +1,6 @@
 using LightGraphs
 using MetaGraphs
+using DataFrames
 using Base.Test
 
 import LightGraphs.SimpleGraphs: SimpleGraph, SimpleDiGraph
@@ -18,4 +19,3 @@ tests = [
         include(tp)
     end
 end
-

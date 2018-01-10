@@ -1,4 +1,4 @@
-# DataFrameGraphs.jl
+# GraphDataFrameBridge.jl
 
 Tools for interoperability between DataFrame objects and LightGraphs and MetaGraphs objects.
 
@@ -7,7 +7,7 @@ Tools for interoperability between DataFrame objects and LightGraphs and MetaGra
 ```
 julia> using DataFrames
 julia> using MetaGraphs
-julia> using DataFrameGraphs
+julia> using GraphDataFrameBridge
 
 julia> df = DataFrame(Dict("start" => ["a", "b", "a", "d"],
                            "finish" => ["b", "c", "e", "e"],
@@ -15,7 +15,7 @@ julia> df = DataFrame(Dict("start" => ["a", "b", "a", "d"],
                            "extras" => 5:8))
 
 # Simple undirected MetaGraph
-julia> mg = metagraph_from_dataframe(df, :start, :finish, MetaGraph)
+julia> mg = MetaGraph(df, :start, :finish, MetaGraph)
 {5, 4} undirected Int64 metagraph with Float64 weights defined by :weight (default weight 1.0)
 
 julia> props(mg, 1)
@@ -23,12 +23,12 @@ Dict Symbol → Any with 1 entries
   :name → "a"
 
 # Simple directed MetaDiGraph
-julia> mdg = metagraph_from_dataframe(df, :start, :finish, MetaDiGraph)
+julia> mdg = MetaDiGraph(df, :start, :finish, MetaDiGraph)
 {5, 4} directed Int64 metagraph with Float64 weights defined by :weight (default weight 1.0)
 
 # MetaGraph with `weight` attribute set and
 # `:extras` values stored as attributes.
-julia> mgw = metagraph_from_dataframe(df, :start, :finish, MetaGraph,
+julia> mgw = MetaGraph(df, :start, :finish, MetaGraph,
                                       weight=:weights,
                                       edge_attributes=:extras)
 {5, 4} undirected Int64 metagraph with Float64 weights defined by :weight (default weight 1.0)

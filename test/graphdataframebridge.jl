@@ -1,6 +1,6 @@
-importall DataFrameGraphs
+importall GraphDataFrameBridge
 
-@testset "DataFrameGraphs" begin
+@testset "GraphDataFrameBridge" begin
 
     # Test data from constructor
     df = DataFrame(Dict("start" => ["a", "b", "a", "d"],
@@ -8,8 +8,8 @@ importall DataFrameGraphs
                         "weights" => 1:4,
                         "extras" => 5:8))
 
-    @inferred(metagraph_from_dataframe(df, :start, :finish, MetaGraph))
-    mg = metagraph_from_dataframe(df, :start, :finish, MetaGraph)
+    @inferred(MetaGraph(df, :start, :finish))
+    mg = MetaGraph(df, :start, :finish)
     @test get_prop(mg, 1, :name) == "a"
     @test get_prop(mg, 2, :name) == "b"
 
@@ -21,21 +21,19 @@ importall DataFrameGraphs
     @test get_prop(mg, 3, :name) == "c"
     @test length(neighbors(mg, 2)) == 2
 
-    @inferred(metagraph_from_dataframe(df, :start, :finish, MetaDiGraph))
-    mg = metagraph_from_dataframe(df, :start, :finish, MetaDiGraph)
+    @inferred(MetaDiGraph(df, :start, :finish))
+    mg = MetaDiGraph(df, :start, :finish)
     @test neighbors(mg, 2)[1] == 3
     @test length(neighbors(mg, 2)) == 1
 
-
-    @inferred (metagraph_from_dataframe(df, :start, :finish, MetaGraph,
-                                            weight=:weights,
-                                            edge_attributes=:extras))
-    mg = metagraph_from_dataframe(df, :start, :finish, MetaGraph,
-                                            weight=:weights,
-                                            edge_attributes=:extras)
+    @inferred (MetaGraph(df, :start, :finish,
+                         weight=:weights,
+                         edge_attributes=:extras))
+    mg = MetaGraph(df, :start, :finish,
+                   weight=:weights,
+                   edge_attributes=:extras)
     @test length(neighbors(mg, 2)) == 2
     @test get_prop(mg, Edge(1, 2), :weight) == 1
     @test get_prop(mg, Edge(4, 5), :weight) == 4
     @test get_prop(mg, Edge(4, 5), :extras) == 8
 end
-

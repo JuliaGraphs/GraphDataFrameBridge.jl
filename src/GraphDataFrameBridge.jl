@@ -1,33 +1,37 @@
-module DataFrameGraphs
+module GraphDataFrameBridge
 using LightGraphs
 using MetaGraphs
 using JLD2
 using DataFrames
+export MetaGraph, MetaDiGraph
 
-export metagraph_from_dataframe
+import MetaGraphs.MetaGraph
+import MetaGraphs.MetaDiGraph
 
-function metagraph_from_dataframe(
+
+function MetaGraph(
     df::DataFrame,
     origin::Symbol,
-    destination::Symbol,
-    graph_type::Union{Type{MetaDiGraph}, Type{MetaGraph}}=MetaGraph;
+    destination::Symbol;
     weight::Symbol=Symbol(),
     edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
 
     """
-        metagraph_from_dataframe(df, origin, destination, graph_type)
-        metagraph_from_dataframe(df, origin, destination, graph_type,
-                                 weight, edge_addributes)
+        MetaGraph(df, origin, destination)
+        MetaGraph(df, origin, destination,
+                  weight, edge_addributes)
 
     Creates a MetaGraph from a DataFrame and stores node names as properties.
 
     `df` is DataFrame formatted as an edgelist
     `origin` is column symbol for origin of each edge
     `destination` is column symbol for destination of each edge
-    `graph_type` is either `MetaGraph` or `MetaDiGraph`
 
     Will create a MetaGraph with a `name` property that stores node labels
     used in `origin` and `destination`.
+
+    Note if `df` contains duplicated edge entries, the last record will
+    overwrite previous entries.
 
     Optional keyword arguments:
 
@@ -35,6 +39,54 @@ function metagraph_from_dataframe(
     `edge_attributes` is a `Symbol` of `Vector{Symbol}` of columns whose values
     will be added as edge properties.
     """
+
+    metagraph_from_dataframe(MetaGraph, df, origin, destination, weight, edge_attributes)
+
+end
+
+
+function MetaDiGraph(
+    df::DataFrame,
+    origin::Symbol,
+    destination::Symbol;
+    weight::Symbol=Symbol(),
+    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
+
+    """
+        MetaDiGraph(df, origin, destination)
+        MetaDiGraph(df, origin, destination,
+                    weight, edge_addributes)
+
+    Creates a MetaDiGraph from a DataFrame and stores node names as properties.
+
+    `df` is DataFrame formatted as an edgelist
+    `origin` is column symbol for origin of each edge
+    `destination` is column symbol for destination of each edge
+
+    Will create a MetaDiGraph with a `name` property that stores node labels
+    used in `origin` and `destination`.
+
+    Note if `df` contains duplicated edge entries, the last record will
+    overwrite previous entries.
+
+    Optional keyword arguments:
+
+    `weight` is column symbol to be used to set weight property.
+    `edge_attributes` is a `Symbol` of `Vector{Symbol}` of columns whose values
+    will be added as edge properties.
+    """
+
+    metagraph_from_dataframe(MetaDiGraph, df, origin, destination, weight, edge_attributes)
+
+end
+
+
+function metagraph_from_dataframe(graph_type,
+                                  df::DataFrame,
+                                  origin::Symbol,
+                                  destination::Symbol,
+                                  weight::Symbol=Symbol(),
+                                  edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
 
     # Map node names to vertex IDs
     nodes = [df[origin]; df[destination]]

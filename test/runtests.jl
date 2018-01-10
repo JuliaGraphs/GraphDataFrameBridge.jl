@@ -10,10 +10,10 @@ testgraphs(g) = [g, SimpleGraph{UInt8}(g), SimpleGraph{Int16}(g)]
 testdigraphs(g) = [g, SimpleDiGraph{UInt8}(g), SimpleDiGraph{Int16}(g)]
 
 tests = [
-    "dataframegraphs"
+    "graphdataframebridge"
 ]
 
-@testset "DataFrameGraphs" begin
+@testset "GraphDataFrameBridge" begin
     for t in tests
         tp = joinpath(testdir, "$(t).jl")
         include(tp)

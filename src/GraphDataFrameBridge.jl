@@ -119,7 +119,7 @@ function metagraph_from_dataframe(graph_type,
         edge_attributes = Vector{Symbol}([edge_attributes])
     end
 
-    origin_id = Symbol(start, :_id)
+    origin_id = Symbol(origin, :_id)
     destination_id = Symbol(destination, :_id)
 
     for e in edge_attributes

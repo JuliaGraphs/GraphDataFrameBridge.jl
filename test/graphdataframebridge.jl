@@ -36,4 +36,21 @@ importall GraphDataFrameBridge
     @test get_prop(mg, Edge(1, 2), :weight) == 1
     @test get_prop(mg, Edge(4, 5), :weight) == 4
     @test get_prop(mg, Edge(4, 5), :extras) == 8
+
+
+    # Test with different column names to ensure nothing name sensitive
+    df2 = DataFrame(Dict("alice" => ["a", "b", "a", "d"],
+                        "bob" => ["b", "c", "e", "e"],
+                        "weightz" => 1:4,
+                        "extraz" => 5:8))
+
+    mg = MetaGraph(df2, :alice, :bob,
+             weight=:weightz,
+             edge_attributes=:extraz)
+    @test length(neighbors(mg, 2)) == 2
+    @test get_prop(mg, Edge(1, 2), :weight) == 1
+    @test get_prop(mg, Edge(4, 5), :weight) == 4
+    @test get_prop(mg, Edge(4, 5), :extraz) == 8
+
+
 end

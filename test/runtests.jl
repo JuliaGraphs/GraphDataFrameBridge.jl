@@ -1,7 +1,8 @@
 using LightGraphs
 using MetaGraphs
 using DataFrames
-using Base.Test
+using GraphDataFrameBridge
+using Test
 
 import LightGraphs.SimpleGraphs: SimpleGraph, SimpleDiGraph
 testdir = dirname(@__FILE__)

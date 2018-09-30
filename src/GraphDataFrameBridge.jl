@@ -1,7 +1,6 @@
 module GraphDataFrameBridge
 using LightGraphs
 using MetaGraphs
-using JLD2
 using DataFrames
 export MetaGraph, MetaDiGraph
 
@@ -94,7 +93,7 @@ function metagraph_from_dataframe(graph_type,
     sort!(nodes)
 
     vertex_names = DataFrame(Dict(:name => nodes))
-    vertex_names[:vertex_id] = 1:nrow(vertex_names)
+    vertex_names[:vertex_id] = Base.OneTo(nrow(vertex_names))
 
     # Merge in to original
     for c in [origin, destination]

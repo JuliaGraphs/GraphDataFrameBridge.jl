@@ -1,5 +1,3 @@
-importall GraphDataFrameBridge
-
 @testset "GraphDataFrameBridge" begin
 
     # Test data from constructor

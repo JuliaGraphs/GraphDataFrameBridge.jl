@@ -27,7 +27,8 @@ function MetaGraph(
     `destination` is column symbol for destination of each edge
 
     Will create a MetaGraph with a `name` property that stores node labels
-    used in `origin` and `destination`.
+    used in `origin` and `destination`. `name` is also set as an index property
+    using `set_indexing_prop!`.
 
     Note if `df` contains duplicated edge entries, the last record will
     overwrite previous entries.
@@ -112,7 +113,6 @@ function metagraph_from_dataframe(graph_type,
         set_prop!(mg, r[:vertex_id], :name, r[:name])
     end
 
-
     # Set edge attributes
     if typeof(edge_attributes) == Symbol
         edge_attributes = Vector{Symbol}([edge_attributes])
@@ -133,6 +133,9 @@ function metagraph_from_dataframe(graph_type,
             set_prop!(mg, Edge(r[origin_id], r[destination_id]), :weight, r[weight])
         end
     end
+
+    # Set name as index (Issue #9)
+    set_indexing_prop!(mg, :name)
 
     return mg
 end

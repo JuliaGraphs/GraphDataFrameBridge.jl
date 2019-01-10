@@ -50,5 +50,8 @@
     @test get_prop(mg, Edge(4, 5), :weight) == 4
     @test get_prop(mg, Edge(4, 5), :extraz) == 8
 
-
+    # Test name column is indexed (Issue #9)
+    @test mg["a", :name] == 1
+    @test mg["b", :name] == 2
+    
 end

@@ -50,8 +50,43 @@
     @test get_prop(mg, Edge(4, 5), :weight) == 4
     @test get_prop(mg, Edge(4, 5), :extraz) == 8
 
+    # Test with additional vertex information
+    attribs = DataFrame(
+        name = ["a", "b", "c", "d", "e"],
+        age = [25, 30, 40, 65, 40],
+        class = ["L", "L", "M", "S", "P"]
+    )
+    @inferred (MetaGraph(df, :start, :finish,
+                   weight=:weights,
+                   edge_attributes=:extras,
+                   vertex_attributes=attribs))
+
+   @inferred (MetaGraph(df, :start, :finish,
+                  weight=:weights,
+                  edge_attributes=:extras,
+                  vertex_attributes=attribs,
+                  vertex_id_col = :name))
+
+    mg = MetaGraph(df, :start, :finish,
+                   weight=:weights,
+                   edge_attributes=:extras,
+                   vertex_attributes=attribs,
+                   vertex_id_col=:name)
+
+   @test length(neighbors(mg, 2)) == 2
+   @test get_prop(mg, Edge(1, 2), :weight) == 1
+   @test get_prop(mg, Edge(4, 5), :weight) == 4
+   @test get_prop(mg, Edge(4, 5), :extras) == 8
+
+   @test get_prop(mg, 1, :name) == "a"
+   @test get_prop(mg, 2, :name) == "b"
+   @test get_prop(mg, 1, :age) == 25
+   @test get_prop(mg, 2, :age) == 30
+   @test get_prop(mg, 3, :class) == "M"
+   @test get_prop(mg, 4, :class) == "S"
+
     # Test name column is indexed (Issue #9)
     @test mg["a", :name] == 1
     @test mg["b", :name] == 2
-    
+
 end

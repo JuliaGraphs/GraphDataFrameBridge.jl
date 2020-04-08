@@ -13,12 +13,15 @@ function MetaGraph(
     origin::Symbol,
     destination::Symbol;
     weight::Symbol=Symbol(),
-    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
+    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}(),
+    vertex_attributes::DataFrame=DataFrame(),
+    vertex_id_col::Symbol=Symbol())
 
     """
         MetaGraph(df, origin, destination)
         MetaGraph(df, origin, destination,
-                  weight, edge_addributes)
+                  weight, edge_attributes,
+                  vertex_attributes, vertex_id_col)
 
     Creates a MetaGraph from a DataFrame and stores node names as properties.
 
@@ -38,9 +41,13 @@ function MetaGraph(
     `weight` is column symbol to be used to set weight property.
     `edge_attributes` is a `Symbol` of `Vector{Symbol}` of columns whose values
     will be added as edge properties.
+    `vertex_attributes` is a DataFrame containing additional information on vertices.
+    `vertex_id_col` is a symbol referring to the column in `vertex_attributes`
+    that contains the names of vertices as used in `df``. If it is not specified,
+    the first column will be used.
     """
 
-    metagraph_from_dataframe(MetaGraph, df, origin, destination, weight, edge_attributes)
+    metagraph_from_dataframe(MetaGraph, df, origin, destination, weight, edge_attributes, vertex_attributes, vertex_id_col)
 
 end
 
@@ -50,12 +57,15 @@ function MetaDiGraph(
     origin::Symbol,
     destination::Symbol;
     weight::Symbol=Symbol(),
-    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
+    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}(),
+    vertex_attributes::DataFrame=DataFrame(),
+    vertex_id_col::Symbol=Symbol())
 
     """
         MetaDiGraph(df, origin, destination)
         MetaDiGraph(df, origin, destination,
-                    weight, edge_addributes)
+                    weight, edge_attributes,
+                    vertex_attributes, vertex_id_col)
 
     Creates a MetaDiGraph from a DataFrame and stores node names as properties.
 
@@ -74,9 +84,13 @@ function MetaDiGraph(
     `weight` is column symbol to be used to set weight property.
     `edge_attributes` is a `Symbol` of `Vector{Symbol}` of columns whose values
     will be added as edge properties.
+    `vertex_attributes` is a DataFrame containing additional information on vertices.
+    `vertex_id_col` is a symbol referring to the column in `vertex_attributes`
+    that contains the names of vertices as used in `df``. If it is not specified,
+    the first column will be used.
     """
 
-    metagraph_from_dataframe(MetaDiGraph, df, origin, destination, weight, edge_attributes)
+    metagraph_from_dataframe(MetaDiGraph, df, origin, destination, weight, edge_attributes, vertex_attributes, vertex_id_col)
 
 end
 
@@ -86,7 +100,9 @@ function metagraph_from_dataframe(graph_type,
                                   origin::Symbol,
                                   destination::Symbol,
                                   weight::Symbol=Symbol(),
-                                  edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
+                                  edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}(),
+                                  vertex_attributes::DataFrame=DataFrame(),
+                                  vertex_id_col::Symbol=Symbol())
 
     # Map node names to vertex IDs
     nodes = [df[!, origin]; df[!, destination]]
@@ -102,15 +118,22 @@ function metagraph_from_dataframe(graph_type,
         df = join(df, temp, on=c)
     end
 
+    # Merge additional attributes to names
+    if vertex_attributes != DataFrame()
+        idsym = vertex_id_col == Symbol() ? names(vertex_attributes)[1] : vertex_id_col
+        vertex_names = join(vertex_names, vertex_attributes, on = :name => idsym, kind = :left)
+    end
+
     # Create Graph
     mg = graph_type(nrow(vertex_names))
     for r in eachrow(df)
         add_edge!(mg, r[Symbol(origin, :_id)], r[Symbol(destination, :_id)])
     end
 
-    # Set vertex names
+    # Set vertex names and attributes
+    attr_names = names(vertex_names[!, Not(:vertex_id)])
     for r in eachrow(vertex_names)
-        set_prop!(mg, r[:vertex_id], :name, r[:name])
+        set_props!(mg, r[:vertex_id], Dict([a => r[a] for a in attr_names]))
     end
 
     # Set edge attributes

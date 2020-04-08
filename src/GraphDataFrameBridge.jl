@@ -89,12 +89,12 @@ function metagraph_from_dataframe(graph_type,
                                   edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}())
 
     # Map node names to vertex IDs
-    nodes = [df[origin]; df[destination]]
+    nodes = [df[!, origin]; df[!, destination]]
     nodes = unique(nodes)
     sort!(nodes)
 
     vertex_names = DataFrame(Dict(:name => nodes))
-    vertex_names[:vertex_id] = Base.OneTo(nrow(vertex_names))
+    vertex_names[!, :vertex_id] = Base.OneTo(nrow(vertex_names))
 
     # Merge in to original
     for c in [origin, destination]

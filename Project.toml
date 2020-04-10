@@ -1,0 +1,18 @@
+name = "GraphDataFrameBridge"
+uuid = "3c71623a-a715-5176-9801-629b201a4880"
+
+[deps]
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
+LightGraphs = "093fc24a-ae57-5d10-9952-331d41423f4d"
+MetaGraphs = "626554b9-1ddb-594c-aa3c-2596fe9399a5"
+
+[compat]
+DataFrames = "≥ 0.13.0"
+LightGraphs = "≥ 1.0.0"
+julia = "≥ 0.7.0"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]

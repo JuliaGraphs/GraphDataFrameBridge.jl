@@ -4,7 +4,7 @@ Tools for interoperability between DataFrame objects and LightGraphs and MetaGra
 
 ## Examples:
 
-```
+```julia
 julia> using DataFrames
 julia> using GraphDataFrameBridge
 

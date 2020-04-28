@@ -28,8 +28,8 @@ julia> mdg = MetaDiGraph(df, :start, :finish)
 # MetaGraph with `weight` attribute set and
 # `:extras` values stored as attributes.
 julia> mgw = MetaGraph(df, :start, :finish,
-                                      weight=:weights,
-                                      edge_attributes=:extras)
+                       weight=:weights,
+                       edge_attributes=:extras)
 {5, 4} undirected Int64 metagraph with Float64 weights defined by :weight (default weight 1.0)
 
 julia> props(mgw, 1, 2)

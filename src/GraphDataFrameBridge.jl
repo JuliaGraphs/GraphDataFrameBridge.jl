@@ -105,23 +105,19 @@ function metagraph_from_dataframe(graph_type,
                                   vertex_id_col::Symbol=Symbol())
 
     # Map node names to vertex IDs
-    nodes = [df[!, origin]; df[!, destination]]
-    nodes = unique(nodes)
-    sort!(nodes)
-
-    vertex_names = DataFrame(Dict(:name => nodes))
-    vertex_names[!, :vertex_id] = Base.OneTo(nrow(vertex_names))
+    nodes = sort!(unique!([df[:, origin]; df[:, destination]]))
+    vertex_names = DataFrame(name=nodes, vertex_id=eachindex(nodes))
 
     # Merge in to original
     for c in [origin, destination]
-        temp = rename(vertex_names, :vertex_id => Symbol(c, :_id), :name => c)
-        df = join(df, temp, on=c)
+        temp = rename(vertex_names, :vertex_id => Symbol(c, :_id))
+        df = innerjoin(df, temp; on=c=>:name)
     end
 
     # Merge additional attributes to names
     if vertex_attributes != DataFrame()
-        idsym = vertex_id_col == Symbol() ? names(vertex_attributes)[1] : vertex_id_col
-        vertex_names = join(vertex_names, vertex_attributes, on = :name => idsym, kind = :left)
+        idsym = vertex_id_col == Symbol() ? first(propertynames(vertex_attributes)) : vertex_id_col
+        vertex_names = leftjoin(vertex_names, vertex_attributes, on = :name => idsym)
     end
 
     # Create Graph
@@ -131,7 +127,7 @@ function metagraph_from_dataframe(graph_type,
     end
 
     # Set vertex names and attributes
-    attr_names = names(vertex_names[!, Not(:vertex_id)])
+    attr_names = propertynames(vertex_names[!, Not(:vertex_id)])
     for r in eachrow(vertex_names)
         set_props!(mg, r[:vertex_id], Dict([a => r[a] for a in attr_names]))
     end

@@ -24,3 +24,7 @@ matrix:
 #    - gfortran
 #before_script: # homebrew for mac
 #  - if [ $TRAVIS_OS_NAME = osx ]; then brew install gcc; fi
+
+# Add tagbot
+name: Julia TagBot
+uses: JuliaRegistries/TagBot@v1.10.0

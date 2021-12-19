@@ -1,5 +1,5 @@
 module GraphDataFrameBridge
-using LightGraphs
+import Graphs
 using MetaGraphs
 using DataFrames
 export MetaGraph, MetaDiGraph

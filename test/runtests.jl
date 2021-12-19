@@ -1,4 +1,4 @@
-import Graphs
+using Graphs
 using MetaGraphs
 using DataFrames
 using GraphDataFrameBridge

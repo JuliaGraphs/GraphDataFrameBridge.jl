@@ -1,5 +1,5 @@
 module GraphDataFrameBridge
-import Graphs
+using Graphs
 using MetaGraphs
 using DataFrames
 export MetaGraph, MetaDiGraph
@@ -12,10 +12,10 @@ function MetaGraph(
     df::DataFrame,
     origin::Symbol,
     destination::Symbol;
-    weight::Symbol=Symbol(),
-    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}(),
-    vertex_attributes::DataFrame=DataFrame(),
-    vertex_id_col::Symbol=Symbol())
+    weight::Symbol = Symbol(),
+    edge_attributes::Union{Vector{Symbol},Symbol} = Vector{Symbol}(),
+    vertex_attributes::DataFrame = DataFrame(),
+    vertex_id_col::Symbol = Symbol())
 
     """
         MetaGraph(df, origin, destination)
@@ -56,10 +56,10 @@ function MetaDiGraph(
     df::DataFrame,
     origin::Symbol,
     destination::Symbol;
-    weight::Symbol=Symbol(),
-    edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}(),
-    vertex_attributes::DataFrame=DataFrame(),
-    vertex_id_col::Symbol=Symbol())
+    weight::Symbol = Symbol(),
+    edge_attributes::Union{Vector{Symbol},Symbol} = Vector{Symbol}(),
+    vertex_attributes::DataFrame = DataFrame(),
+    vertex_id_col::Symbol = Symbol())
 
     """
         MetaDiGraph(df, origin, destination)
@@ -96,22 +96,22 @@ end
 
 
 function metagraph_from_dataframe(graph_type,
-                                  df::DataFrame,
-                                  origin::Symbol,
-                                  destination::Symbol,
-                                  weight::Symbol=Symbol(),
-                                  edge_attributes::Union{Vector{Symbol}, Symbol}=Vector{Symbol}(),
-                                  vertex_attributes::DataFrame=DataFrame(),
-                                  vertex_id_col::Symbol=Symbol())
+    df::DataFrame,
+    origin::Symbol,
+    destination::Symbol,
+    weight::Symbol = Symbol(),
+    edge_attributes::Union{Vector{Symbol},Symbol} = Vector{Symbol}(),
+    vertex_attributes::DataFrame = DataFrame(),
+    vertex_id_col::Symbol = Symbol())
 
     # Map node names to vertex IDs
     nodes = sort!(unique!([df[:, origin]; df[:, destination]]))
-    vertex_names = DataFrame(name=nodes, vertex_id=eachindex(nodes))
+    vertex_names = DataFrame(name = nodes, vertex_id = eachindex(nodes))
 
     # Merge in to original
     for c in [origin, destination]
         temp = rename(vertex_names, :vertex_id => Symbol(c, :_id))
-        df = innerjoin(df, temp; on=c=>:name)
+        df = innerjoin(df, temp; on = c => :name)
     end
 
     # Merge additional attributes to names

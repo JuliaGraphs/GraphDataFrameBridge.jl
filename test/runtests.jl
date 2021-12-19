@@ -1,10 +1,10 @@
-using LightGraphs
+import Graphs
 using MetaGraphs
 using DataFrames
 using GraphDataFrameBridge
 using Test
 
-import LightGraphs.SimpleGraphs: SimpleGraph, SimpleDiGraph
+import Graphs.SimpleGraphs: SimpleGraph, SimpleDiGraph
 testdir = dirname(@__FILE__)
 
 testgraphs(g) = [g, SimpleGraph{UInt8}(g), SimpleGraph{Int16}(g)]

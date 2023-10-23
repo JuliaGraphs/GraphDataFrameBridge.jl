@@ -9,13 +9,14 @@ import MetaGraphs.MetaDiGraph
 
 
 function MetaGraph(
-    df::DataFrame,
+    df::T,
     origin::Symbol,
     destination::Symbol;
     weight::Symbol = Symbol(),
     edge_attributes::Union{Vector{Symbol},Symbol} = Vector{Symbol}(),
     vertex_attributes::DataFrame = DataFrame(),
-    vertex_id_col::Symbol = Symbol())
+    vertex_id_col::Symbol = Symbol()
+) where T <: AbstractDataFrame
 
     """
         MetaGraph(df, origin, destination)
@@ -53,13 +54,14 @@ end
 
 
 function MetaDiGraph(
-    df::DataFrame,
+    df::T,
     origin::Symbol,
     destination::Symbol;
     weight::Symbol = Symbol(),
     edge_attributes::Union{Vector{Symbol},Symbol} = Vector{Symbol}(),
     vertex_attributes::DataFrame = DataFrame(),
-    vertex_id_col::Symbol = Symbol())
+    vertex_id_col::Symbol = Symbol()
+) where T <: AbstractDataFrame
 
     """
         MetaDiGraph(df, origin, destination)
@@ -96,13 +98,14 @@ end
 
 
 function metagraph_from_dataframe(graph_type,
-    df::DataFrame,
+    df::T,
     origin::Symbol,
     destination::Symbol,
     weight::Symbol = Symbol(),
     edge_attributes::Union{Vector{Symbol},Symbol} = Vector{Symbol}(),
     vertex_attributes::DataFrame = DataFrame(),
-    vertex_id_col::Symbol = Symbol())
+    vertex_id_col::Symbol = Symbol()
+) where T <: AbstractDataFrame
 
     # Map node names to vertex IDs
     nodes = sort!(unique!([df[:, origin]; df[:, destination]]))

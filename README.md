@@ -37,3 +37,7 @@ Dict Symbol → Any with 2 entries
   :extras → 5
   :weight → 1
 ```
+
+## Updating Release:
+
+Note to self: update version in `Project.toml`, then comment on commit `@JuliaRegistrator register`

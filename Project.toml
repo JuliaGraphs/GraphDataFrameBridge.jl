@@ -1,6 +1,6 @@
 name = "GraphDataFrameBridge"
 uuid = "3c71623a-a715-5176-9801-629b201a4880"
-version = "0.3.1"
+version = "0.3.2"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"

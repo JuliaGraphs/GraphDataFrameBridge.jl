@@ -7,6 +7,8 @@ export MetaGraph, MetaDiGraph
 import MetaGraphs.MetaGraph
 import MetaGraphs.MetaDiGraph
 
+include("DataFrame.jl")
+export DataFrame
 
 function MetaGraph(
     df::T,

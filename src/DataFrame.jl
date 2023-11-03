@@ -14,7 +14,7 @@ function DataFrame(gr::T; type = :node) where T <:AbstractMetaGraph
     elseif type == :edge
         :edge => Edge[], gr.eprops, edges, ne
       else
-        error("specify :node or :edge")
+        error("specify type equal to :node or :edge")
     end
 
     dx = DataFrame(fl)
